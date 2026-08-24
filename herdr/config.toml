@@ -1,0 +1,63 @@
+onboarding = false
+# Use PowerShell 7 for new panes. Normal interactive startup loads the existing
+# Microsoft.PowerShell_profile.ps1 profile.
+[terminal]
+default_shell = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+shell_mode = "auto"
+new_cwd = "follow"
+
+[keys]
+prefix = "ctrl+a"
+
+# Move horizontally through tabs and vertically through Spaces.
+previous_tab = ["prefix+p", "prefix+h"]
+next_tab = ["prefix+n", "prefix+l"]
+previous_workspace = "prefix+k"
+next_workspace = "prefix+j"
+previous_agent = "prefix+shift+k"
+next_agent = "prefix+shift+j"
+
+# Use direct Neovim-style chords for movement between panes.
+focus_pane_left = "ctrl+alt+h"
+focus_pane_down = "ctrl+alt+j"
+focus_pane_up = "ctrl+alt+k"
+focus_pane_right = "ctrl+alt+l"
+
+# Navigate mode and Copy mode already use Vim-style h/j/k/l by default.
+navigate_pane_left = "h"
+navigate_pane_down = "j"
+navigate_pane_up = "k"
+navigate_pane_right = "l"
+
+[ui]
+show_agent_labels_on_pane_borders = false
+agent_panel_sort = "spaces"
+
+[experimental]
+kitty_graphics = true
+
+# BEGIN jhochenbaum.hunkdiff — managed by `setup-keys`; edit via the plugin, not by hand
+[[keys.command]]
+key = "prefix+shift+h"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.review"
+description = "hunk: review changes"
+
+[[keys.command]]
+key = "prefix+shift+s"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.send-review"
+description = "hunk: send review to agent"
+
+[[keys.command]]
+key = "prefix+shift+c"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.review:commit"
+description = "hunk: review the last commit"
+
+[[keys.command]]
+key = "prefix+shift+a"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.review:staged"
+description = "hunk: review staged changes"
+# END jhochenbaum.hunkdiff
