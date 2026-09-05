@@ -1,0 +1,29 @@
+onboarding = false
+
+[terminal]
+default_shell = "bash"
+shell_mode = "auto"
+new_cwd = "follow"
+
+[keys]
+prefix = "ctrl+a"
+
+# Move horizontally through tabs and vertically through Spaces.
+previous_tab = ["prefix+p", "prefix+h"]
+next_tab = ["prefix+n", "prefix+l"]
+previous_workspace = "prefix+k"
+next_workspace = "prefix+j"
+previous_agent = "prefix+shift+k"
+next_agent = "prefix+shift+j"
+
+# Use direct Neovim-style chords for movement between panes.
+focus_pane_left = "ctrl+alt+h"
+focus_pane_down = "ctrl+alt+j"
+focus_pane_up = "ctrl+alt+k"
+focus_pane_right = "ctrl+alt+l"
+
+# Navigate mode and Copy mode already use Vim-style h/j/k/l by default.
+navigate_pane_left = "h"
+navigate_pane_down = "j"
+navigate_pane_up = "k"
+navigate_pane_right = "l"

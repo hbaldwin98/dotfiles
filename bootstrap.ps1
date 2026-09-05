@@ -30,6 +30,12 @@ if ($InstallTools) {
     }
 
     foreach ($package in $packages) {
+        winget list --id $package --exact --source winget | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "$package is already installed"
+            continue
+        }
+
         Write-Host "Installing $package"
         winget install --id $package --exact --source winget --silent `
             --accept-package-agreements --accept-source-agreements
