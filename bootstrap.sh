@@ -3,7 +3,7 @@
 #
 #   curl -fsSL https://raw.githubusercontent.com/hbaldwin98/dotfiles/main/bootstrap.sh | bash
 #
-# To also install the editor, shell prompt, and LazyVim prerequisites:
+# To also install the editor, shell prompt, toolchains, and LazyVim prerequisites:
 #
 #   curl -fsSL https://raw.githubusercontent.com/hbaldwin98/dotfiles/main/bootstrap.sh | bash -s -- --install-tools
 set -euo pipefail
@@ -20,6 +20,8 @@ done
 
 apt_packages=(
     git
+    make
+    gawk
     ripgrep
     fd-find
     bat
@@ -75,6 +77,64 @@ install_gh_cli() {
     sudo apt-get install -y gh
 }
 
+# Fish-like autosuggestions for Bash (not packaged usefully on Debian/Ubuntu).
+install_blesh() {
+    local installed="${XDG_DATA_HOME:-$HOME/.local/share}/blesh/ble.sh"
+    if [[ -f "$installed" ]]; then
+        return 0
+    fi
+
+    echo "Installing ble.sh (Bash autosuggestions / line editor)"
+    local src="${XDG_CACHE_HOME:-$HOME/.cache}/ble.sh-src"
+    if [[ -d "$src/.git" ]]; then
+        git -C "$src" pull --ff-only
+    else
+        rm -rf "$src"
+        git clone --recursive --depth 1 --shallow-submodules \
+            https://github.com/akinomyoga/ble.sh.git "$src"
+    fi
+    make -C "$src" install PREFIX="$HOME/.local"
+}
+
+# Official Go release (apt's golang package lags behind).
+install_golang() {
+    local latest current arch tarball
+    latest="$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1)"
+    if [[ -z "$latest" ]]; then
+        echo "Could not resolve the latest Go version from go.dev." >&2
+        return 1
+    fi
+
+    current="$(command -v go >/dev/null 2>&1 && go env GOVERSION 2>/dev/null)" || true
+    if [[ "$current" == "$latest" && -x /usr/local/go/bin/go ]]; then
+        return 0
+    fi
+
+    arch="$(uname -m)"
+    case "$arch" in
+        x86_64) arch=amd64 ;;
+        aarch64) arch=arm64 ;;
+        *) echo "Unsupported architecture for Go: $arch; install it manually." >&2; return 1 ;;
+    esac
+    tarball="${latest}.linux-${arch}.tar.gz"
+
+    echo "Installing Go ${latest}"
+    curl -fsSL -o "/tmp/${tarball}" "https://go.dev/dl/${tarball}"
+    sudo rm -rf /usr/local/go
+    sudo tar -C /usr/local -xzf "/tmp/${tarball}"
+    rm "/tmp/${tarball}"
+}
+
+# rustup manages the Rust toolchain; PATH is handled by bash/profile.sh.
+install_rustup() {
+    if command -v rustup >/dev/null 2>&1; then
+        return 0
+    fi
+
+    echo "Installing rustup"
+    curl --proto '=https' --tlsv1.2 -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path
+}
+
 if [[ "$INSTALL_TOOLS" -eq 1 ]]; then
     if ! command -v apt-get >/dev/null 2>&1; then
         echo "apt-get is required for --install-tools on this script; install the tools listed in README.md manually." >&2
@@ -87,6 +147,9 @@ if [[ "$INSTALL_TOOLS" -eq 1 ]]; then
 
     install_neovim
     install_gh_cli
+    install_blesh
+    install_golang
+    install_rustup
 
     if ! command -v herdr >/dev/null 2>&1; then
         echo "Installing Herdr"

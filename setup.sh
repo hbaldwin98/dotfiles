@@ -33,6 +33,7 @@ link "$HOME/.config/nvim" "$REPO_ROOT/nvim"
 link "$HOME/.config/opencode" "$REPO_ROOT/opencode"
 link "$HOME/.config/herdr/config.toml" "$REPO_ROOT/herdr/config.linux.toml"
 link "$HOME/.agents/skills" "$REPO_ROOT/.agents/skills"
+link "$HOME/.blerc" "$REPO_ROOT/bash/blerc"
 
 marker="# dotfiles: source shared bash profile"
 bashrc="$HOME/.bashrc"

@@ -21,6 +21,7 @@ $packages = @(
     "tree-sitter.tree-sitter-cli",
     "LLVM.LLVM",
     "OpenJS.NodeJS.LTS",
+    "GoLang.Go",
     "DEVCOM.JetBrainsMonoNerdFont"
 )
 
@@ -49,6 +50,31 @@ if ($InstallTools) {
         [Environment]::GetEnvironmentVariable("Path", "Machine"),
         [Environment]::GetEnvironmentVariable("Path", "User")
     ) -join ";"
+
+    if (-not (Get-Command rustup -ErrorAction SilentlyContinue)) {
+        Write-Host "Installing rustup"
+        $rustupInit = Join-Path $env:TEMP "rustup-init.exe"
+        # Default to the host architecture; fall back to x86_64 if detection fails.
+        $rustupUri = if ([Environment]::Is64BitOperatingSystem) {
+            if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
+                "https://win.rustup.rs/aarch64"
+            } else {
+                "https://win.rustup.rs/x86_64"
+            }
+        } else {
+            "https://win.rustup.rs/i686"
+        }
+        Invoke-WebRequest -Uri $rustupUri -OutFile $rustupInit
+        & $rustupInit -y --no-modify-path
+        if ($LASTEXITCODE -ne 0) {
+            throw "rustup-init failed (exit code $LASTEXITCODE)."
+        }
+        Remove-Item -LiteralPath $rustupInit -Force -ErrorAction SilentlyContinue
+        $cargoBin = Join-Path $env:USERPROFILE ".cargo\bin"
+        if (Test-Path -LiteralPath $cargoBin) {
+            $env:Path = "$cargoBin;$env:Path"
+        }
+    }
 
     if (-not (Get-Command herdr -ErrorAction SilentlyContinue)) {
         Write-Host "Installing Herdr"

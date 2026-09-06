@@ -1,0 +1,7 @@
+# ble.sh init (sourced as ~/.blerc). Matches the Oh My Posh Catppuccin Mocha prompt.
+# Default auto_complete uses a near-white background; this scheme drops it.
+
+bleopt color_scheme='catppuccin_mocha'
+
+# Dim ghost text only — no background highlight on suggestions.
+ble-face auto_complete='fg=#6c7086,italic'

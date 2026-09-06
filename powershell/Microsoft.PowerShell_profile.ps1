@@ -4,6 +4,17 @@ if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
 
+# Ensure toolchain bins are visible even when installers use --no-modify-path.
+@(
+  (Join-Path $env:USERPROFILE ".cargo\bin"),
+  (Join-Path $env:USERPROFILE "go\bin"),
+  "C:\Program Files\Go\bin"
+) | ForEach-Object {
+  if ((Test-Path -LiteralPath $_) -and ($env:Path -notlike "*$_*")) {
+    $env:Path = "$_;$env:Path"
+  }
+}
+
 oh-my-posh init pwsh --config (Join-Path $env:POSH_THEMES_PATH "catppuccin_mocha.omp.json") | Invoke-Expression
 
 Set-Alias -Name cd -Value __zoxide_z -Option AllScope -Scope Global -Force

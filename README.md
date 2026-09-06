@@ -10,8 +10,8 @@ To clone and link the configuration without installing applications:
 curl -fsSL https://raw.githubusercontent.com/hbaldwin98/dotfiles/main/bootstrap.sh | bash
 ```
 
-To also install the editor, shell prompt, and LazyVim prerequisites via `apt`, opt in
-with `--install-tools`:
+To also install the editor, shell prompt, Go, rustup, and LazyVim prerequisites via
+`apt`, opt in with `--install-tools`:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/hbaldwin98/dotfiles/main/bootstrap.sh | bash -s -- --install-tools
@@ -25,12 +25,18 @@ OpenCode and the other agent CLIs below are never installed by the bootstrap.
 Linux config (`herdr/config.linux.toml`, which uses `bash` instead of `pwsh`)
 into place, backing up any existing paths with a timestamped suffix, and adds
 a line to `~/.bashrc` that sources `bash/profile.sh` (the Bash equivalent of
-`powershell/Microsoft.PowerShell_profile.ps1`: Oh My Posh prompt, zoxide, and
-the `git*` functions/aliases).
+`powershell/Microsoft.PowerShell_profile.ps1`: Oh My Posh prompt, zoxide,
+ble.sh autosuggestions, fzf key bindings, and the `git*` functions/aliases).
 
 Debian/Ubuntu package the `fd-find` and `bat` binaries as `fdfind` and
 `batcat`; `bash/profile.sh` aliases `fd`/`bat` to them automatically when the
 canonical names aren't already on `PATH`.
+
+Typing suggestions come from [ble.sh](https://github.com/akinomyoga/ble.sh)
+(ghost text from history/completions; accept with Right Arrow or End). fzf adds
+Ctrl-R history search, Ctrl-T file pick, and Alt-C directory jump. Suggestion
+colors live in `bash/blerc` (Catppuccin Mocha, dim ghost text, no suggestion
+background).
 
 ### Agent CLIs
 
@@ -56,9 +62,12 @@ idempotent and only backs up paths that don't already point here.
 
 | Tool | Purpose | Installation |
 | --- | --- | --- |
-| Git, ripgrep, fd, bat, fzf, zoxide, lazygit, tree-sitter-cli, Node.js | LazyVim requirements | `apt` (via `--install-tools`) |
+| Git, make, gawk, ripgrep, fd, bat, fzf, zoxide, lazygit, tree-sitter-cli, Node.js | LazyVim requirements and ble.sh build deps | `apt` (via `--install-tools`) |
 | Neovim | Editor | Official prebuilt release (via `--install-tools`); apt's version is too old for LazyVim's 0.11.2+ requirement |
 | GitHub CLI (`gh`) | GitHub from the command line | Official apt repo (via `--install-tools`) |
+| ble.sh | Bash autosuggestions / line editor | Built from [akinomyoga/ble.sh](https://github.com/akinomyoga/ble.sh) into `~/.local` (via `--install-tools`) |
+| Go | Latest stable toolchain | Official tarball from [go.dev](https://go.dev/dl/) into `/usr/local/go` (via `--install-tools`) |
+| rustup | Rust toolchain manager | Official [rustup.rs](https://rustup.rs/) installer (via `--install-tools`) |
 | Herdr | Terminal workspace manager | [herdr.dev/docs/install](https://herdr.dev/docs/install/) |
 | Oh My Posh | Bash prompt | [ohmyposh.dev/docs/installation/linux](https://ohmyposh.dev/docs/installation/linux) |
 | JetBrains Mono Nerd Font | Icons in Neovim and the prompt | [nerdfonts.com](https://www.nerdfonts.com/font-downloads) (not automated; install manually) |
@@ -93,7 +102,7 @@ from Windows PowerShell. Git and PowerShell 7 must already be installed:
 powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm https://raw.githubusercontent.com/hbaldwin98/dotfiles/main/bootstrap.ps1)))"
 ```
 
-To also install the editor, shell, terminal tools, font, and LazyVim
+To also install the editor, shell, terminal tools, font, Go, rustup, and LazyVim
 prerequisites, opt in with `-InstallTools`:
 
 ```powershell
@@ -133,6 +142,8 @@ Developer Mode or an elevated PowerShell session.
 | lazygit | Git UI used by LazyVim | [github.com/jesseduffield/lazygit](https://github.com/jesseduffield/lazygit#installation) |
 | tree-sitter CLI and LLVM | Parser compilation | [tree-sitter.github.io](https://tree-sitter.github.io/tree-sitter/creating-parsers/1-getting-started.html) |
 | Node.js LTS | Markdown preview and language tooling | [nodejs.org](https://nodejs.org/en/download) |
+| Go | Latest stable toolchain | winget `GoLang.Go` (via `-InstallTools`) |
+| rustup | Rust toolchain manager | Official [rustup.rs](https://rustup.rs/) installer (via `-InstallTools`) |
 | JetBrains Mono Nerd Font | Icons in Neovim and the prompt | [nerdfonts.com](https://www.nerdfonts.com/font-downloads) |
 
 The enabled LazyVim Dart extra needs a separate
