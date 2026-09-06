@@ -2,16 +2,17 @@
 # Install optional AI coding agent CLIs. Never run automatically by
 # bootstrap.sh/setup.sh; opt in per tool or with --all.
 #
-#   ./install-agents.sh --opencode --cursor-agent --codex
+#   ./install-agents.sh --opencode --cursor-agent --codex --claude
 #   ./install-agents.sh --all
 set -euo pipefail
 
 install_opencode=0
 install_cursor_agent=0
 install_codex=0
+install_claude=0
 
 if [[ "$#" -eq 0 ]]; then
-    echo "Usage: $0 [--opencode] [--cursor-agent] [--codex] [--all]" >&2
+    echo "Usage: $0 [--opencode] [--cursor-agent] [--codex] [--claude] [--all]" >&2
     exit 1
 fi
 
@@ -20,7 +21,13 @@ for arg in "$@"; do
         --opencode) install_opencode=1 ;;
         --cursor-agent) install_cursor_agent=1 ;;
         --codex) install_codex=1 ;;
-        --all) install_opencode=1; install_cursor_agent=1; install_codex=1 ;;
+        --claude) install_claude=1 ;;
+        --all)
+            install_opencode=1
+            install_cursor_agent=1
+            install_codex=1
+            install_claude=1
+            ;;
         *) echo "Unknown argument: $arg" >&2; exit 1 ;;
     esac
 done
@@ -46,4 +53,9 @@ if [[ "$install_codex" -eq 1 ]]; then
     else
         curl -fsSL https://chatgpt.com/codex/install.sh | sh
     fi
+fi
+
+if [[ "$install_claude" -eq 1 ]]; then
+    echo "Installing Claude Code"
+    curl -fsSL https://claude.ai/install.sh | bash
 fi

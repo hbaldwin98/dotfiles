@@ -40,11 +40,11 @@ background).
 
 ### Agent CLIs
 
-Install any combination of opencode, Cursor's `cursor-agent`, and OpenAI's
-`codex` with:
+Install any combination of opencode, Cursor's `cursor-agent`, OpenAI's
+`codex`, and Anthropic's Claude Code with:
 
 ```bash
-./install-agents.sh --opencode --cursor-agent --codex
+./install-agents.sh --opencode --cursor-agent --codex --claude
 # or
 ./install-agents.sh --all
 ```
@@ -71,7 +71,7 @@ idempotent and only backs up paths that don't already point here.
 | Herdr | Terminal workspace manager | [herdr.dev/docs/install](https://herdr.dev/docs/install/) |
 | Oh My Posh | Bash prompt | [ohmyposh.dev/docs/installation/linux](https://ohmyposh.dev/docs/installation/linux) |
 | JetBrains Mono Nerd Font | Icons in Neovim and the prompt | [nerdfonts.com](https://www.nerdfonts.com/font-downloads) (not automated; install manually) |
-| opencode, cursor-agent, codex | Optional AI coding agent CLIs | `install-agents.sh` |
+| opencode, cursor-agent, codex, claude | Optional AI coding agent CLIs | `install-agents.sh` |
 
 The enabled LazyVim Dart extra needs a separate
 [Flutter SDK installation](https://docs.flutter.dev/get-started/install/linux) for
